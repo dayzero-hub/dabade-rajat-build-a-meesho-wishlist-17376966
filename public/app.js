@@ -3,11 +3,10 @@ const wishlistGrid = document.getElementById('wishlist');
 const statusEl = document.getElementById('status');
 
 let currentProducts = [];
-let wishlistIds = new Set();
 
-function renderProducts(products) {
+function renderProducts(products, savedIds) {
   productsGrid.innerHTML = products.map(p => {
-    const saved = wishlistIds.has(p.id);
+    const saved = savedIds.has(p.id);
     return `
       <div class="card ${saved ? 'saved' : ''}">
         <button class="heart ${saved ? 'active' : ''}" data-id="${p.id}" aria-label="Save ${p.name}">&hearts;</button>
@@ -26,6 +25,7 @@ function renderWishlist(items) {
   }
   wishlistGrid.innerHTML = items.map(p => `
     <div class="card saved">
+      <button class="remove" data-id="${p.id}" aria-label="Remove ${p.name}">Remove</button>
       <img src="${p.image}" alt="${p.name}">
       <div>${p.name}</div>
       <div class="price">₹${p.price}</div>
@@ -43,8 +43,8 @@ async function loadWishlist() {
   const res = await fetch('/api/wishlist');
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const items = await res.json();
-  wishlistIds = new Set(items.map(p => p.id));
   renderWishlist(items);
+  return items;
 }
 
 async function addToWishlist(productId) {
@@ -54,8 +54,8 @@ async function addToWishlist(productId) {
     body: JSON.stringify({ product_id: productId }),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  await loadWishlist();
-  renderProducts(currentProducts);
+  const items = await loadWishlist();
+  renderProducts(currentProducts, new Set(items.map(p => p.id)));
 }
 
 productsGrid.addEventListener('click', (e) => {
@@ -76,8 +76,8 @@ productsGrid.addEventListener('click', (e) => {
 async function init() {
   try {
     currentProducts = await loadProducts();
-    await loadWishlist();
-    renderProducts(currentProducts);
+    const items = await loadWishlist();
+    renderProducts(currentProducts, new Set(items.map(p => p.id)));
   } catch (err) {
     productsGrid.textContent = 'Could not load products. Try refreshing.';
   }
