@@ -35,10 +35,17 @@ node server.js
 ## Running it
 
 ```bash
-node server.js
+npm install
+node --watch server.js
 ```
 
-Then open `http://localhost:3000` in a browser, and `GET /api/products` returns the product list as JSON.
+Then open `http://localhost:3000` in a browser to see the product grid and wishlist. The
+wishlist button (heart on a product, Remove on a wishlist item) talks to the server over
+`POST`/`DELETE /api/wishlist`, and `GET /api/products` returns the product list as JSON.
+
+The wishlist lives in memory on the server (a plain array, no database). **Restarting the
+server clears it** — that's expected, not a bug. `node --watch` restarts on every file save,
+so if you're mid-edit and the wishlist looks like it forgot everything, that's why.
 
 **The bit that catches everyone:** when the page and the server disagree, the page usually
 says nothing at all. A `fetch` that fails does not throw the way you expect — check the
