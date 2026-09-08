@@ -20,7 +20,7 @@ function renderProducts(products, savedIds) {
 
 function renderWishlist(items) {
   if (!items.length) {
-    wishlistGrid.innerHTML = '<p class="empty">Your wishlist is empty.</p>';
+    wishlistGrid.innerHTML = '<p class="empty">Your wishlist is empty. Tap the heart on a product above to save it here.</p>';
     return;
   }
   wishlistGrid.innerHTML = items.map(p => `
@@ -58,6 +58,13 @@ async function addToWishlist(productId) {
   renderProducts(currentProducts, new Set(items.map(p => p.id)));
 }
 
+async function removeFromWishlist(productId) {
+  const res = await fetch(`/api/wishlist/${productId}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const items = await loadWishlist();
+  renderProducts(currentProducts, new Set(items.map(p => p.id)));
+}
+
 productsGrid.addEventListener('click', (e) => {
   const btn = e.target.closest('.heart');
   if (!btn) return;
@@ -73,6 +80,21 @@ productsGrid.addEventListener('click', (e) => {
     });
 });
 
+wishlistGrid.addEventListener('click', (e) => {
+  const btn = e.target.closest('.remove');
+  if (!btn) return;
+  const productId = Number(btn.dataset.id);
+  btn.disabled = true;
+  statusEl.textContent = '';
+  removeFromWishlist(productId)
+    .catch(() => {
+      statusEl.textContent = 'Could not remove that item. Try again.';
+    })
+    .finally(() => {
+      btn.disabled = false;
+    });
+});
+
 async function init() {
   try {
     currentProducts = await loadProducts();
@@ -80,6 +102,7 @@ async function init() {
     renderProducts(currentProducts, new Set(items.map(p => p.id)));
   } catch (err) {
     productsGrid.textContent = 'Could not load products. Try refreshing.';
+    wishlistGrid.textContent = '';
   }
 }
 
