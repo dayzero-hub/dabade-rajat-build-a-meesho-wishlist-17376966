@@ -1,0 +1,24 @@
+{
+  "name": "dabade-rajat-build-a-meesho-wishlist-17376966",
+  "version": "1.0.0",
+  "description": "Welcome. This repository is **empty on purpose**. Everything in it is yours to create.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dayzero-hub/dabade-rajat-build-a-meesho-wishlist-17376966.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/dayzero-hub/dabade-rajat-build-a-meesho-wishlist-17376966/issues"
+  },
+  "homepage": "https://github.com/dayzero-hub/dabade-rajat-build-a-meesho-wishlist-17376966#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

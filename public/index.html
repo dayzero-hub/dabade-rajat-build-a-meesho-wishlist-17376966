@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Meesho Wishlist</title>
+<style>
+  body { font-family: sans-serif; margin: 2rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+  .card { border: 1px solid #ddd; border-radius: 8px; padding: 0.75rem; text-align: center; }
+  .card img { width: 100%; border-radius: 4px; }
+  .price { font-weight: bold; color: #333; }
+</style>
+</head>
+<body>
+<h1>Wishlist</h1>
+<div class="grid" id="products"></div>
+<script>
+  const grid = document.getElementById('products');
+  fetch('/api/products')
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+    .then(products => {
+      grid.innerHTML = products.map(p => `
+        <div class="card">
+          <img src="${p.image}" alt="${p.name}">
+          <div>${p.name}</div>
+          <div class="price">₹${p.price}</div>
+        </div>
+      `).join('');
+    })
+    .catch(err => {
+      grid.textContent = 'Could not load products. Try refreshing.';
+    });
+</script>
+</body>
+</html>

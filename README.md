@@ -32,6 +32,14 @@ npm install express
 node server.js
 ```
 
+## Running it
+
+```bash
+node server.js
+```
+
+Then open `http://localhost:3000` in a browser, and `GET /api/products` returns the product list as JSON.
+
 **The bit that catches everyone:** when the page and the server disagree, the page usually
 says nothing at all. A `fetch` that fails does not throw the way you expect — check the
 browser's Network tab and the terminal running the server, not just the page.
